@@ -102,7 +102,7 @@ begin
     exact q hdivmsucc_h,
     -- For h > 0
     have temp := (mul_le_mul_left (ne_zero.pos (succ h))).1 hl_le_hk,
-    have l_le_k := (le_exist l k).1 temp,
+    have l_le_k := le.dest temp,
     -- Extraction of o = k - l 
     cases l_le_k with o,
     rw eq_comm at l_le_k_h,
