@@ -2,62 +2,12 @@ import data.real.basic
 import data.nat.prime
 open nat
 
-lemma le_exist : ∀ a b : nat, a ≤ b ↔ ∃ c : nat, a + c = b :=
-begin
-  intros a b,
-  split,
-  intros ab,
-  induction a with n Ind,
-  have y := zero_add b,
-  use b,
-  exact y,
-
-  have nlen := le_of_eq (refl n),
-  have x := le_succ_of_le nlen,
-  have Z := le_trans x ab,
-  have H := Ind Z,
-  cases H with h,
-  induction h with k,
-  rw add_zero at H_h,
-  rw H_h,
-  exfalso,
-  rw H_h at ab,
-  rw succ_eq_add_one at ab,
-  exact nat.lt_asymm ab ab,
-  
-  rw add_succ at H_h,
-  rw ← succ_add at H_h,
-  use k,
-  exact H_h,
-  
-  intro eab,
-  cases eab with k,
-  revert b,
-  induction k with n Ind,
-  intros a ap,
-  rw add_zero at ap,
-  rw ap,
-  
-  intro b,
-  intro anb,
-  cases b with m,
-  rw add_succ at anb,
-  exfalso,
-  exact succ_ne_zero (a + n) anb,
-
-  rw add_succ at anb,
-  have y := succ.inj anb,
-  have z := Ind m y,
-  have Z := le_succ m,
-  exact le_trans z Z,
-end
-
 theorem GcdM : ∀ a b : nat, b ≤ a → ∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g :=
 begin
   intro a,
 
   -- As we will prove this by Strong Induction, we state the strong induction hypotheses
-  have Hsr : ∀ n : nat, (∀ a < n, ∀ b : nat, (b ≤ a → ∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g)) → 
+  have StrongInductionHyp : ∀ n : nat, (∀ a < n, ∀ b : nat, (b ≤ a → ∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g)) → 
                   (∀ b : nat, b ≤ n  → ∃ g : nat, g ∣ n ∧ g ∣ b ∧ ∀ h : nat, h ∣ n ∧ h ∣ b → h ∣ g) :=
   begin
     -- Proof of the strong induction hypothesis
@@ -85,12 +35,12 @@ begin
 
     -- b > 0 case
     -- We define c = n - b.succ
-    have k := (le_exist b.succ n).1 bn,
-    cases k with c K,
+    have ExistC := le.dest bn,
+    cases ExistC with c K,
 
     -- Separation of b.succ <= c and c <= b.succ
-    have u := le_total b.succ c,
-    cases u,
+    have BC := le_total b.succ c,
+    cases BC,
 
     --Verifiying that c < n so that we can use HypRec
     have c_lt_n : c < n :=
@@ -100,12 +50,12 @@ begin
       rw add_comm b 1 at K,
       rw ← add_assoc at K,
       have w := Exists.intro b K,
-      have z := (le_exist (c + 1) n).2 w,
+      have z := le.intro K,
       exact z,
     end,
 
     -- HypRec gives us a g which is gcd(b.succ, c)
-    have G := HypRec c c_lt_n b.succ u,
+    have G := HypRec c c_lt_n b.succ BC,
     cases G with g G, -- extraction of g from its existence
     use g,
     
@@ -140,7 +90,8 @@ begin
     rw hdivmsucc_h at K,
   
     -- As we cannot use minus as we work in nat, we have to prove that l ≤ k. So we begin by proving h * l ≤ h * k
-    have hl_le_hk := (le_exist (h * l) (h * k)).2 (Exists.intro c K),
+    --have hl_le_hk := (le_exist (h * l) (h * k)).2 (Exists.intro c K),
+    have hl_le_hk := le.intro K,
     
     -- We will use that we can simplify h * l ≤ h * k if h ≠ 0 
     cases h,
@@ -183,8 +134,8 @@ begin
     rw add_comm at K,
     rw ← add_succ at K,
     rw add_comm at K,
-    have msltn := (le_exist b.succ.succ n).2 (Exists.intro C K),
-    have maxi := HypRec b.succ msltn C.succ u,
+    have msltn := le.intro K,
+    have maxi := HypRec b.succ msltn C.succ BC,
     cases maxi with g,
     use g,
     cases maxi_h,
@@ -221,9 +172,9 @@ begin
     have k := zero_lt_succ b.succ,
     exact le_lt_antisymm msltn k,
 
-    have temp := (le_exist (hp.succ * u) (hp.succ * r)).2 (Exists.intro C.succ K),
+    have temp := le.intro K,
     have ztz := (mul_le_mul_left (ne_zero.pos (succ hp))).1 temp,
-    have urt := (le_exist u r).1 ztz,
+    have urt := le.dest ztz,
     cases urt with U,
     rw eq_comm at urt_h,
     rw urt_h at K,
@@ -233,5 +184,6 @@ begin
     exact mini hp.succ (and.intro hdms hpc),
   end,
 
-  exact nat.strong_induction_on a Hsr,
+  -- We apply strong induction
+  exact nat.strong_induction_on a StrongInductionHyp,
 end
