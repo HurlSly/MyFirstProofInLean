@@ -1,1 +1,1 @@
-This is my sample project
+My Lean learning project.
