@@ -1,4 +1,3 @@
-import data.real.basic
 import data.nat.prime
 open nat
 
