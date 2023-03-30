@@ -12,6 +12,8 @@ begin
     intros n HypRec,
     intro b,
     cases n with n,
+    
+    -- n = 0 case
     use b,
     split,
     simp,
@@ -21,6 +23,7 @@ begin
     cases hz,
     assumption,
     
+    -- n > 0 case
     have T := mod_lt b (zero_lt_succ n),
     have Y := HypRec (b % n.succ) T n.succ,
     cases Y with g,
