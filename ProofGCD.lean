@@ -45,7 +45,6 @@ begin
     rw mul_comm _ g at M,
     rw mul_assoc at M,
     rw ← mul_add at M,
-    
     use (r + b / (g * s) * s),
     rw eq_comm at M,
     assumption,
@@ -53,9 +52,7 @@ begin
     intro h,
     intro hns,
     cases hns with hns1 hns2,
-    have X : h ∣ b % n.succ,
-
-    exact (dvd_mod_iff hns1).mpr hns2,
+    have X : h ∣ b % n.succ := (dvd_mod_iff hns1).mpr hns2,
     exact maxi h (and.intro X hns1),    
   end,
 
