@@ -186,3 +186,42 @@ begin
   -- We apply strong induction
   exact nat.strong_induction_on a StrongInductionHyp,
 end
+
+theorem GcdM2 : ∀ a b : nat, ∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g :=
+begin
+  intro a,
+
+  -- As we will prove this by Strong Induction, we state the strong induction hypotheses
+  have StrongInductionHyp : ∀ n : nat, (∀ a < n, ∀ b : nat, (∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g)) → 
+                  (∀ b : nat, ∃ g : nat, g ∣ n ∧ g ∣ b ∧ ∀ h : nat, h ∣ n ∧ h ∣ b → h ∣ g) :=
+  begin
+    intros n HypRec,
+    intro b,
+    cases n with n,
+    use b,
+    split,
+    simp,
+    split,
+    simp,
+    intros h hz,
+    cases hz,
+    assumption,
+    
+    have T := mod_lt b (zero_lt_succ n),
+    have Y := HypRec (b % n.succ) T n.succ,
+    cases Y with g,
+    use g,
+
+    cases Y_h with gbns temp,
+    cases temp with gns maxi,
+
+    split,
+    assumption,
+    split,
+    
+    
+
+  end,
+
+  exact nat.strong_induction_on a StrongInductionHyp,
+end
