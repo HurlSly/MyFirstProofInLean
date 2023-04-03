@@ -58,3 +58,31 @@ begin
 
   exact nat.strong_induction_on a StrongInductionHyp,
 end
+
+
+theorem ExcludedMiddle : (∀ P : Prop, P ∨ ¬P) ↔ (∀ P : Prop, ¬¬P → P) :=
+begin
+  split,
+
+  intro porp,
+  intro P,
+  intro nnP,
+  have X := porp P,
+  cases X,
+  assumption,
+
+  exfalso,
+  apply nnP,
+  assumption,
+
+  intro porp,
+  intro P,
+  have nnpornp : ¬¬(P ∨ ¬ P):=
+  begin
+    intro N,
+    have Z := λ (p : P), N ((or.intro_left ¬P) p),
+    exact N (or.intro_right P Z),
+  end,
+
+  exact porp (P ∨ ¬P) nnpornp,
+end
