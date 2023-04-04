@@ -65,13 +65,15 @@ begin
 
   intro porp,
   intro P,
-  intro nnP,
-  have X := porp P,
-  cases X,
-  assumption,
-
-  exfalso,
-  exact nnP X,
+  intro nnp,
+  cases porp P with p np,
+  {
+    assumption,
+  },
+  {
+    exfalso,
+    exact nnp np,
+  },
   
   intro porp,
   intro P,
