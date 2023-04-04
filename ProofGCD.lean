@@ -86,8 +86,3 @@ begin
 
   exact porp (P ∨ ¬P) nnpornp,
 end
-
-theorem Chinese : ∀ a b : nat, ∃ g , g ∣ a → g ∣ b → (∀ h, h ∣ a → h ∣ b → h ∣ g) → ∃ r s, r * a + s * b = g:=
-begin
-  sorry,
-end
