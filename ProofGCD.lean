@@ -53,7 +53,7 @@ begin
     intro hns,
     cases hns with hns1 hns2,
     have X : h ∣ b % n.succ := (dvd_mod_iff hns1).mpr hns2,
-    exact maxi h (and.intro X hns1),    
+    exact maxi h (and.intro X hns1),
   end,
 
   exact nat.strong_induction_on a StrongInductionHyp,
@@ -85,4 +85,9 @@ begin
   end,
 
   exact porp (P ∨ ¬P) nnpornp,
+end
+
+theorem Chinese : ∀ a b : nat, ∃ g , g ∣ a → g ∣ b → (∀ h, h ∣ a → h ∣ b → h ∣ g) → ∃ r s, r * a + s * b = g:=
+begin
+  sorry,
 end
