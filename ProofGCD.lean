@@ -1,4 +1,4 @@
-import data.nat.prime
+import data.nat.basic
 open nat
 
 theorem GcdM : ∀ a b : nat, ∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g :=
@@ -16,8 +16,10 @@ begin
     -- n = 0 case
     use b,
     split,
+    use 0,
     simp,
     split,
+    use 1,
     simp,
     intros h hz,
     cases hz,
