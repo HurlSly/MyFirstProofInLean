@@ -93,7 +93,7 @@ lemma notnot : ∀ A : Prop, ¬¬(A ∨ ¬A) :=
 begin
   intro A,
   intro H,
-  let nA : ¬A :=
+  have nA : ¬A :=
   begin
     intro a,
     exact H ((or.intro_left ¬A) a),
@@ -107,12 +107,12 @@ begin
   intro A,
   intro H,
   cases H with H1 H2,
-  let x : ¬¬(A ∨ ¬A) := notnot A,
+  have x : ¬¬(A ∨ ¬A) := notnot A,
   apply x,
   intro AornA,
-  cases AornA,
-  have t := H1 AornA,
-  exact t AornA,
-  have t := H2 AornA,
-  exact AornA t,
+  cases AornA with a na,
+  have t := H1 a,
+  exact t a,
+  have t := H2 na,
+  exact na t,
 end
