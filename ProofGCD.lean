@@ -9,8 +9,7 @@ begin
   have StrongInductionHyp : ∀ n : nat, (∀ a < n, ∀ b : nat, (∃ g : nat, g ∣ a ∧ g ∣ b ∧ ∀ h : nat, h ∣ a ∧ h ∣ b → h ∣ g)) → 
                   (∀ b : nat, ∃ g : nat, g ∣ n ∧ g ∣ b ∧ ∀ h : nat, h ∣ n ∧ h ∣ b → h ∣ g) :=
   begin
-    intros n HypRec,
-    intro b,
+    intros n HypRec b,
     cases n with n,
     
     -- n = 0 case
@@ -51,42 +50,13 @@ begin
     rw eq_comm at M,
     assumption,
 
-    intro h,
-    intro hns,
+    intros h hns,
     cases hns with hns1 hns2,
     have X : h ∣ b % n.succ := (dvd_mod_iff hns1).mpr hns2,
     exact maxi h (and.intro X hns1),
   end,
 
   exact nat.strong_induction_on a StrongInductionHyp,
-end
-
-theorem ExcludedMiddle : (∀ P : Prop, P ∨ ¬P) ↔ (∀ P : Prop, ¬¬P → P) :=
-begin
-  split,
-
-  intro porp,
-  intro P,
-  intro nnp,
-  cases porp P with p np,
-  {
-    assumption,
-  },
-  {
-    exfalso,
-    exact nnp np,
-  },
-  
-  intro porp,
-  intro P,
-  have nnpornp : ¬¬(P ∨ ¬ P):=
-  begin
-    intro N,
-    have Z := λ (p : P), N ((or.intro_left ¬P) p),
-    exact N (or.intro_right P Z),
-  end,
-
-  exact porp (P ∨ ¬P) nnpornp,
 end
 
 lemma notnot : ∀ A : Prop, ¬¬(A ∨ ¬A) :=
@@ -102,17 +72,26 @@ begin
   exact H ((or.intro_right A) nA),
 end
 
-theorem AnotA : ∀ A : Prop, ¬ (A ↔ ¬ A) :=
+theorem ExcludedMiddleDoubleNeg : (∀ P : Prop, P ∨ ¬P) ↔ (∀ P : Prop, ¬¬P → P) :=
 begin
-  intro A,
-  intro H,
+  split,
+  intros porp P nnp,
+  cases porp P with p np,
+  assumption,
+  exfalso,
+  exact nnp np,  
+  
+  intros porp P,
+  exact porp (P ∨ ¬P) (notnot P),
+end
+
+theorem AnotA : ∀ A : Prop, ¬(A ↔ ¬A) :=
+begin
+  intros A H,
   cases H with H1 H2,
-  have x : ¬¬(A ∨ ¬A) := notnot A,
-  apply x,
+  apply notnot A,
   intro AornA,
   cases AornA with a na,
-  have t := H1 a,
-  exact t a,
-  have t := H2 na,
-  exact na t,
+  exact H1 a a,
+  exact na (H2 na),
 end
