@@ -61,8 +61,7 @@ end
 
 lemma notnot : ∀ A : Prop, ¬¬(A ∨ ¬A) :=
 begin
-  intro A,
-  intro H,
+  intros A H,
   have nA : ¬A :=
   begin
     intro a,
