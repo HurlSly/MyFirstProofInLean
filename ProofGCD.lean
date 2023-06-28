@@ -61,15 +61,14 @@ end
 
 lemma notnot : ∀ A : Prop, ¬¬(A ∨ ¬A) :=
 begin
-  intro A,
-  intro H,
-  have nA : ¬A :=
+  intros A H,
+  have na : ¬A :=
   begin
     intro a,
-    exact H ((or.intro_left ¬A) a),
+    exact H (or.intro_left (¬A) a),
   end,
 
-  exact H ((or.intro_right A) nA),
+  exact H (or.intro_right A na),
 end
 
 theorem ExcludedMiddleDoubleNeg : (∀ P : Prop, P ∨ ¬P) ↔ (∀ P : Prop, ¬¬P → P) :=
