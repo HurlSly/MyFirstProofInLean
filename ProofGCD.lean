@@ -94,3 +94,11 @@ begin
   exact H1 a a,
   exact na (H2 na),
 end
+
+theorem QuotientExists : ∀ A : Type, ∀ R : A → A → Prop, ∃ (B : Type) (Q : A → B), (∀ b : B, 
+                ∃ a : A, Q a = b) ∧ (∀ a b : A, R a b → Q a = Q b) :=
+begin
+  intro A,
+  intro R,
+  sorry,
+end
